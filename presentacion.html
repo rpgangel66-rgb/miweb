@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon: Green Future Initiative</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Font Awesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6; /* Neutral Light */
+        }
+
+        /* Chart Container Styling Rules - CRITICAL */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Prevent excessive width */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Base height */
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Card Hover Effects */
+        .interactive-card {
+            transition: all 0.3s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .interactive-card.active {
+            border: 2px solid #ff9900; /* Amazon Orange */
+            background-color: #ffffff;
+        }
+    </style>
+
+    <!-- Chosen Palette: Amazon Corporate & Eco (Dark Blue #232f3e, Orange #ff9900, Eco Green #4ade80, Neutral Light #f3f4f6) -->
+    <!-- Application Structure Plan: 
+         1. Hero Header: Sets the tone, introduces the CEO persona and mission.
+         2. Strategic Dashboard (Nav): A grid of the 5 key actions acting as the primary navigation controller.
+         3. Dynamic Content Area: A split-view section (Context vs. Visualization) that updates based on the selected strategy. This allows users to "drill down" into each point without leaving the page.
+         4. Impact Summary: A footer section with key references and a final call to action.
+         Why: This structure transforms a linear presentation into an exploratory dashboard, suitable for stakeholders who want to see the "big picture" and then dive into details.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Electric Fleet: Bar Chart (Comparison of CO2). Goal: Show massive reduction impact.
+         2. Packaging: Doughnut Chart (Material Composition). Goal: Highlight shift from plastic to compostable.
+         3. Energy: Line Chart (Progress to 100% Renewable). Goal: Show trajectory/speed of adoption.
+         4. Circular Loop: Process Flow (HTML/CSS Cards). Goal: Explain the steps of the recycling program clearly.
+         5. STEM Education: Horizontal Bar (Impact metrics). Goal: Quantify social reach.
+         All visualizations use Chart.js within constrained containers. No SVG/Mermaid used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+</head>
+<body class="text-gray-800">
+
+    <!-- 1. HEADER / HERO SECTION -->
+    <header class="bg-[#232f3e] text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center gap-4 mb-4 md:mb-0">
+                <i class="fa-brands fa-amazon text-5xl"></i>
+                <div>
+                    <h1 class="text-3xl font-bold leading-tight"><span class="text-[#4ade80]">Green Future</span> Initiative</h1>
+                    <p class="text-sm text-gray-300 tracking-wide">Delivering a Sustainable Future</p>
+                </div>
+            </div>
+            <div class="text-center md:text-right">
+                <div class="text-sm uppercase tracking-wider text-[#ff9900] font-bold">Presented by</div>
+                <div class="font-medium text-lg">Angel Santiago Cruz Solis <span class="text-xs text-gray-400 font-normal">| CEO</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. MISSION STATEMENT -->
+    <section class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-8 text-center max-w-4xl">
+            <h2 class="text-2xl font-light text-gray-600 mb-4">"With great power comes great responsibility."</h2>
+            <p class="text-gray-500 leading-relaxed">
+                As one of the largest companies in the world, Amazon has a duty to lead change. 
+                Today we present <strong class="text-[#232f3e]">5 Strategic Pillars</strong> to decarbonize our logistics, 
+                revolutionize our packaging, and empower our communities. Explore our strategy below.
+            </p>
+        </div>
+    </section>
+
+    <!-- 3. INTERACTIVE DASHBOARD (NAVIGATION) -->
+    <main class="container mx-auto px-4 py-8">
+        
+        <!-- Navigation Grid -->
+        <div class="mb-2 text-sm text-gray-400 font-bold uppercase tracking-wider">Select a strategy to explore:</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
+            <!-- Card 1 -->
+            <button onclick="loadSection('transport')" id="btn-transport" class="interactive-card active bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-left group focus:outline-none">
+                <div class="text-[#ff9900] mb-3 text-2xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-truck-fast"></i></div>
+                <h3 class="font-bold text-gray-800 mb-1">Electric Fleet</h3>
+                <p class="text-xs text-gray-500">100% Electrification by 2030</p>
+            </button>
+            
+            <!-- Card 2 -->
+            <button onclick="loadSection('packaging')" id="btn-packaging" class="interactive-card bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-left group focus:outline-none">
+                <div class="text-[#4ade80] mb-3 text-2xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-box-open"></i></div>
+                <h3 class="font-bold text-gray-800 mb-1">Zero Waste</h3>
+                <p class="text-xs text-gray-500">Biodegradable Packaging</p>
+            </button>
+
+            <!-- Card 3 -->
+            <button onclick="loadSection('energy')" id="btn-energy" class="interactive-card bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-left group focus:outline-none">
+                <div class="text-blue-500 mb-3 text-2xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-solar-panel"></i></div>
+                <h3 class="font-bold text-gray-800 mb-1">Renewable Energy</h3>
+                <p class="text-xs text-gray-500">AWS Data Centers</p>
+            </button>
+
+            <!-- Card 4 -->
+            <button onclick="loadSection('circular')" id="btn-circular" class="interactive-card bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-left group focus:outline-none">
+                <div class="text-purple-500 mb-3 text-2xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-recycle"></i></div>
+                <h3 class="font-bold text-gray-800 mb-1">Circular Loop</h3>
+                <p class="text-xs text-gray-500">E-Waste Management</p>
+            </button>
+
+            <!-- Card 5 -->
+            <button onclick="loadSection('social')" id="btn-social" class="interactive-card bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-left group focus:outline-none">
+                <div class="text-red-500 mb-3 text-2xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-graduation-cap"></i></div>
+                <h3 class="font-bold text-gray-800 mb-1">STEM Education</h3>
+                <p class="text-xs text-gray-500">Global Social Investment</p>
+            </button>
+        </div>
+
+        <!-- 4. DYNAMIC CONTENT SECTION -->
+        <div id="dynamic-content" class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden min-h-[500px] flex flex-col lg:flex-row transition-opacity duration-300">
+            
+            <!-- Left: Context & Text -->
+            <div class="w-full lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center bg-gray-50 border-r border-gray-100">
+                <div class="mb-6">
+                    <span id="section-tag" class="bg-[#232f3e] text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Logistics</span>
+                </div>
+                <h2 id="section-title" class="text-3xl lg:text-4xl font-bold text-gray-800 mb-6">Transforming the Last Mile</h2>
+                <div class="prose text-gray-600 mb-8">
+                    <p id="section-intro" class="mb-4 text-lg leading-relaxed">
+                        Our transportation network is the backbone of our operation, but also our largest source of emissions. The transition to electric vehicles is not just an option; it is an urgent necessity for the health of our cities.
+                    </p>
+                    <ul id="section-list" class="space-y-3">
+                        <li class="flex items-start"><i class="fa-solid fa-check text-[#4ade80] mt-1 mr-3"></i><span>Total replacement of diesel vans with Rivian electric vans.</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-[#4ade80] mt-1 mr-3"></i><span>Reduction of noise and pollution in urban areas.</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-check text-[#4ade80] mt-1 mr-3"></i><span>Smart charging infrastructure in all warehouses.</span></li>
+                    </ul>
+                </div>
+                <div id="section-stat" class="mt-auto pt-6 border-t border-gray-200">
+                    <div class="text-4xl font-black text-[#232f3e] mb-1">100,000+</div>
+                    <div class="text-sm text-gray-500 uppercase tracking-wide">Electric Vehicles by 2030</div>
+                </div>
+            </div>
+
+            <!-- Right: Visualization -->
+            <div class="w-full lg:w-1/2 p-8 lg:p-12 flex items-center justify-center bg-white relative">
+                <!-- Chart Container -->
+                <div class="chart-container w-full">
+                    <canvas id="mainChart"></canvas>
+                </div>
+                <!-- Alternative HTML Viz Container (for Flowcharts) -->
+                <div id="html-viz" class="hidden w-full h-full flex flex-col justify-center space-y-4">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- 5. FOOTER / REFERENCES -->
+    <footer class="bg-[#1a222d] text-gray-400 py-12 mt-12">
+        <div class="container mx-auto px-4 grid md:grid-cols-2 gap-8">
+            <div>
+                <h4 class="text-white text-lg font-bold mb-4">Sources and References (APA)</h4>
+                <ul class="text-sm space-y-2">
+                    <li><i class="fa-solid fa-book-open mr-2 text-gray-600"></i> United States Environmental Protection Agency. (2023). <em>Greenhouse Gas Emissions from a Typical Passenger Vehicle.</em></li>
+                    <li><i class="fa-solid fa-book-open mr-2 text-gray-600"></i> World Wildlife Fund. (2022). <em>The business case for reducing plastic waste.</em></li>
+                    <li><i class="fa-solid fa-book-open mr-2 text-gray-600"></i> International Energy Agency. (2023). <em>Renewables 2023: Analysis and forecast to 2028.</em></li>
+                </ul>
+            </div>
+            <div class="flex flex-col justify-center items-start md:items-end">
+                <p class="mb-4">Ready to support the change?</p>
+                <button class="bg-[#ff9900] hover:bg-[#e68a00] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg">
+                    Support the Initiative
+                </button>
+            </div>
+        </div>
+        <div class="text-center text-xs mt-8 pt-8 border-t border-gray-700 opacity-50">
+            © 2024 Amazon Green Future Initiative Demo. For Educational Purposes Only.
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA STORE ---
+        const sections = {
+            transport: {
+                tag: "Sustainable Logistics",
+                title: "Electric Fleet Revolution",
+                intro: "Traditional transportation is noisy and polluting. Our goal is to radically transform how packages arrive at your door, eliminating carbon emissions from ground transport by 2030.",
+                list: [
+                    "Deployment of 100,000 Rivian electric delivery vans.",
+                    "Elimination of millions of tons of CO2 annually.",
+                    "Improvement of air quality in densely populated cities."
+                ],
+                stat: { value: "100%", label: "Electric Fleet in 2030" },
+                chartType: "bar",
+                chartData: {
+                    labels: ['Current Fleet (Diesel)', '2025 Fleet (Hybrid/EV)', '2030 Fleet (Target)'],
+                    datasets: [{
+                        label: 'CO2 Emissions (Millions of Tons)',
+                        data: [15, 8, 0.5],
+                        backgroundColor: ['#ef4444', '#f59e0b', '#4ade80'],
+                        borderRadius: 8
+                    }]
+                },
+                vizType: "chart"
+            },
+            packaging: {
+                tag: "Material Economy",
+                title: "Zero-Waste Packaging",
+                intro: "We are redesigning the 'unboxing' experience. We are eliminating single-use plastics and replacing them with compostable and smart materials that protect both the product and the planet.",
+                list: [
+                    "Replacement of plastic bubbles with recycled paper.",
+                    "Use of mycelium (mushroom) technology for protection.",
+                    "Packaging that becomes fertilizer for your garden."
+                ],
+                stat: { value: "-90%", label: "Virgin Plastic Reduction" },
+                chartType: "doughnut",
+                chartData: {
+                    labels: ['Non-Recyclable Plastic', 'Recycled Cardboard', 'Compostable Materials (Mushroom/Starch)'],
+                    datasets: [{
+                        data: [5, 65, 30],
+                        backgroundColor: ['#cbd5e1', '#d97706', '#4ade80'],
+                        hoverOffset: 4
+                    }]
+                },
+                vizType: "chart"
+            },
+            energy: {
+                tag: "Digital Infrastructure",
+                title: "Renewable Energy for AWS",
+                intro: "Our Data Centers power much of the internet. We commit to ensuring that every search, every stream, and every click is powered by the sun and the wind.",
+                list: [
+                    "Massive investment in global solar and wind farms.",
+                    "Goal to operate with 100% renewable energy by 2025.",
+                    "Reduction of the digital carbon footprint."
+                ],
+                stat: { value: "100%", label: "Renewable Energy in Data Centers" },
+                chartType: "line",
+                chartData: {
+                    labels: ['2020', '2021', '2022', '2023', '2024', '2025 (Target)'],
+                    datasets: [{
+                        label: '% Renewable Energy Adoption',
+                        data: [65, 72, 85, 90, 95, 100],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                vizType: "chart"
+            },
+            circular: {
+                tag: "Product Responsibility",
+                title: "'Circular Loop' Program",
+                intro: "Responsibility does not end with delivery. We created a system to recover old electronic devices, ensuring that valuable materials are recovered and toxic ones do not touch the ground.",
+                list: [
+                    "Free pickup of old devices upon delivery of new ones.",
+                    "Refurbishment to extend lifespan.",
+                    "Certified recycling for rare mineral extraction."
+                ],
+                stat: { value: "50M+", label: "Devices Recovered" },
+                vizType: "html",
+                htmlContent: `
+                    <div class="grid grid-cols-1 gap-4 h-full">
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 shadow-sm flex items-center">
+                            <div class="text-2xl text-blue-600 mr-4"><i class="fa-solid fa-cart-shopping"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">1. Purchase</h4>
+                                <p class="text-sm text-gray-600">Customer buys a new device.</p>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500 shadow-sm flex items-center">
+                            <div class="text-2xl text-indigo-600 mr-4"><i class="fa-solid fa-truck-ramp-box"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">2. Trade-in</h4>
+                                <p class="text-sm text-gray-600">Amazon collects the old device for free.</p>
+                            </div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500 shadow-sm flex items-center">
+                            <div class="text-2xl text-green-600 mr-4"><i class="fa-solid fa-wrench"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">3. Recovery</h4>
+                                <p class="text-sm text-gray-600">Repair or mineral extraction.</p>
+                            </div>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500 shadow-sm flex items-center">
+                            <div class="text-2xl text-orange-600 mr-4"><i class="fa-solid fa-infinity"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">4. Reuse</h4>
+                                <p class="text-sm text-gray-600">Materials return to the production chain.</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            social: {
+                tag: "Community Impact",
+                title: "Global STEM Education",
+                intro: "The future is technological, and it must be accessible to everyone. We invest our profits in training the next generation of engineers and scientists in disadvantaged communities.",
+                list: [
+                    "Full university scholarships for low-income students.",
+                    "Free coding bootcamps.",
+                    "Donation of hardware to public schools."
+                ],
+                stat: { value: "$500M", label: "Investment in Education" },
+                chartType: "bar",
+                chartData: {
+                    indexAxis: 'y', // CORRECCIÓN: Definido aquí para que el renderizador lo detecte
+                    labels: ['Students Reached', 'Scholarships Awarded', 'Schools Equipped'],
+                    datasets: [{
+                        label: 'Annual Impact (Thousands)',
+                        data: [250, 15, 5], 
+                        backgroundColor: ['#8b5cf6', '#ec4899', '#f97316'],
+                        barPercentage: 0.6, // Barras más estéticas
+                    }]
+                },
+                vizType: "chart"
+            }
+        };
+
+        // --- CHART INSTANCE CONTROL ---
+        let currentChart = null;
+
+        // --- RENDER FUNCTIONS ---
+        function renderChart(config) {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            if (currentChart) {
+                currentChart.destroy();
+            }
+
+            const chartConfig = {
+                type: config.chartType,
+                data: config.chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, 
+                    indexAxis: config.chartData.indexAxis || 'x', // Ahora detectará 'y' correctamente
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: config.title + ' - Impact Projection',
+                            padding: { bottom: 20 },
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.x + 'k ' + context.dataset.label.split('(')[0];
+                                }
+                            }
+                        }
+                    },
+                    scales: config.chartType === 'doughnut' ? {} : {
+                        x: { // Configuración para eje X (valores) en gráfico horizontal
+                            beginAtZero: true,
+                            grid: { display: true, borderDash: [2, 2] }
+                        },
+                        y: { // Configuración para eje Y (etiquetas)
+                            grid: { display: false }
+                        }
+                    }
+                }
+            };
+
+            currentChart = new Chart(ctx, chartConfig);
+        }
+
+        function loadSection(sectionKey) {
+            const data = sections[sectionKey];
+            const contentArea = document.getElementById('dynamic-content');
+            
+            // 1. Update UI Active State
+            document.querySelectorAll('.interactive-card').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('bg-white');
+                btn.classList.remove('bg-gray-50');
+            });
+            const activeBtn = document.getElementById(`btn-${sectionKey}`);
+            if(activeBtn) activeBtn.classList.add('active');
+
+            // 2. Animate Opacity for smoothness
+            contentArea.style.opacity = '0.5';
+
+            setTimeout(() => {
+                // 3. Update Text Content
+                document.getElementById('section-tag').innerText = data.tag;
+                document.getElementById('section-title').innerText = data.title;
+                document.getElementById('section-intro').innerText = data.intro;
+                
+                // Update List
+                const listEl = document.getElementById('section-list');
+                listEl.innerHTML = '';
+                data.list.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-start';
+                    li.innerHTML = `<i class="fa-solid fa-check text-[#4ade80] mt-1 mr-3"></i><span>${item}</span>`;
+                    listEl.appendChild(li);
+                });
+
+                // Update Stat
+                document.getElementById('section-stat').innerHTML = `
+                    <div class="text-4xl font-black text-[#232f3e] mb-1">${data.stat.value}</div>
+                    <div class="text-sm text-gray-500 uppercase tracking-wide">${data.stat.label}</div>
+                `;
+
+                // 4. Update Visualization (Chart vs HTML)
+                const chartCanvas = document.getElementById('mainChart');
+                const htmlViz = document.getElementById('html-viz');
+                const chartContainer = document.querySelector('.chart-container');
+
+                if (data.vizType === 'chart') {
+                    htmlViz.classList.add('hidden');
+                    chartContainer.classList.remove('hidden');
+                    renderChart(data);
+                } else {
+                    chartContainer.classList.add('hidden');
+                    htmlViz.classList.remove('hidden');
+                    htmlViz.innerHTML = data.htmlContent;
+                }
+
+                // Restore opacity
+                contentArea.style.opacity = '1';
+            }, 200);
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSection('transport'); // Load default section
+        });
+
+    </script>
+</body>
+</html>
